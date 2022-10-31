@@ -4,7 +4,6 @@ public class LinkedList implements List{
 	private Node head;
 	private int size;
 	
-	
 	public LinkedList() {
 		head = null;
 		size = 0;
@@ -65,8 +64,49 @@ public class LinkedList implements List{
 		}
 		size++;
 	}
-	public Object remove(int pos) throws Exception{ return null;}
-	public boolean remove(Object o) { return true;}
+	public Object remove(int pos) throws Exception{ 
+		if (pos >= size) {
+			throw new IndexOutOfBoundsException();
+		}
+		if (pos == 0) {
+			Object toReturn = head.getElt();
+			head = head.getNext();
+			size--;
+			return toReturn;
+		}
+		
+		Node curr = head;
+		for (int i = 0; i < pos-1; i++) {
+			curr = curr.getNext();
+		}
+		Object thing = curr.getNext().getElt();
+		curr.setNext(curr.getNext().getNext());
+		size--;
+		return thing;
+	}
+	
+	public boolean remove(Object o) { 
+		/* int pos = this.find(o);
+		 * if (pos == -1) return false;
+		 * this.remove(pos);
+		 * return true;
+		 */
+		Node curr = head;
+		int i = 0;
+		if (o.equals(head.getElt())) {
+			head = head.getNext();
+			return true;
+		}
+		while (i < size-1 && !curr.getNext().getElt().equals(o)) {
+			curr = curr.getNext();
+			i++;
+		}
+		if (i == size-1) return false;
+		curr.setNext(curr.getNext().getNext());
+		size--;
+		return true;
+	}
+	
 	public int find(Object o) {
 		Node curr = head;
 		for (int i = 0; i< size; i++) {
@@ -104,8 +144,13 @@ public class LinkedList implements List{
 		System.out.println(ll.set(11, 4));
 		System.out.println(ll.set(12, 15));
 		System.out.println(ll);
-		try{ ll.insert(45, 0); }
-		catch(Exception E) { System.out.println(E);}
+		try {
+			ll.insert(45, 5); 
+			System.out.println(ll.remove(0));
+			System.out.println(ll.remove((Integer)7));
+
+		} catch(Exception E) { System.out.println(E); }
+		
 		System.out.println(ll);
 		
 	}

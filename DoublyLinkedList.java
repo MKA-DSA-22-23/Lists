@@ -49,7 +49,44 @@ public class DoublyLinkedList implements List{
 		size++;
 	}
 	public void insert(Object o, int pos) throws Exception{
-		
+		if (pos > size) throw new IndexOutOfBoundsException();
+		if (pos == size) {// putting something at tail
+			this.add(o);
+			return;
+		}
+		DNode newNode = new DNode(o);
+		if (pos == 0) { // case where inserting at beginning
+			//set next of newNode to head
+			newNode.setNext(head);
+			//set prev of head to new node
+			head.setPrev(newNode);
+			//set head to newNode
+			head = newNode;
+		}
+		else {
+			// get curr to pos
+			DNode curr;
+			if (pos < size/2) {
+				curr = head;
+				for(int i = 0;i < pos; i++) {
+					curr = curr.getNext();
+				}	
+			}
+			else {
+				curr = tail;
+				for(int i = 0;i < size-pos-1; i++) {
+					curr = curr.getPrev();
+				}	
+			}
+			// set newNode next and prev
+			newNode.setNext(curr);
+			newNode.setPrev(curr.getPrev());
+			// set curr's prev next to newNode
+			curr.getPrev().setNext(newNode);
+			// set curr prev to newNode
+			curr.setPrev(newNode);
+		}
+		size++;
 	}
 	public Object remove(int pos) throws Exception{ 
 		if (pos >= size) {
@@ -94,9 +131,13 @@ public class DoublyLinkedList implements List{
 		size--;
 		// return statement
 		return toReturn;
-		return null;
 	}
 	public boolean remove(Object o) { 
+		int pos = this.find(o);
+		if (pos < 0) return false;
+		try {
+			this.remove(pos);
+		} catch(Exception e) {System.out.println(e);}
 		return true;
 	}
 	public int find(Object o) {
@@ -133,7 +174,10 @@ public class DoublyLinkedList implements List{
 		System.out.println(dl);
 		System.out.println(dl.find(7));
 		try {
-			System.out.println(dl.get(4));
+			dl.insert(20, 5);
 		} catch(Exception E) { System.out.println(E); }
+		System.out.println(dl.remove((Integer) 51));
+		System.out.println(dl);
+
 	}
 }
